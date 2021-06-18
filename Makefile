@@ -10,10 +10,13 @@ windows: dir
 	GOOS=windows GOARCH=amd64 go build -o bin/windows-x64.exe
 
 macos: dir
-	GOOS=darwin GOARCH=arm64 go build -o bin/macos-x64.exe
+	GOOS=darwin GOARCH=amd64 go build -o bin/macos-x64.exe
 
 macos-arm: dir
 	GOOS=darwin GOARCH=arm64 go build -o bin/macos-arm64.exe
 
 dir:
 	mkdir -p bin
+
+clean:
+	rm -rf bin
