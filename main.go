@@ -19,7 +19,7 @@ var username = flag.String("username", "", "Your username")
 func GetConnection(u url.URL) *websocket.Conn {
 	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
 	if err != nil {
-		log.Fatal("Unable to connect to", u.String())
+		log.Fatal("Unable to connect to ", u.String())
 	}
 
 	return c
