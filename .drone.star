@@ -65,6 +65,8 @@ def publish(combinations):
                         "api_key": {"from_secret": "GITHUB_API_KEY"},
                         "files": ["bin/*"],
                         "checksum": ["md5", "sha256"],
+                        "title": "$DRONE_TAG",
+                        "notes": "CHANGELOG.md",
                     },
                     "when": {"event": ["tag"]},
                 }
