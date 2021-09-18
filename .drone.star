@@ -24,7 +24,12 @@ def main(ctx):
 
 def job(os, arch):
     return dict(
-        {"name": "build %s-%s" % (os, arch), "steps": [step(os, arch)]}, **front_matter
+        {
+            "name": "build %s-%s" % (os, arch),
+            "steps": [step(os, arch)],
+            "when": {"event": {"exclude": ["tag"]}},
+        },
+        **front_matter
     )
 
 
