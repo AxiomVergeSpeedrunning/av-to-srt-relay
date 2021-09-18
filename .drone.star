@@ -27,7 +27,10 @@ def job(os, arch):
         {
             "name": "build %s-%s" % (os, arch),
             "steps": [step(os, arch)],
-            "trigger": {"event": ["pull_request"]},
+            "trigger": {
+                "branch": {"exclude": ["main", "master"]},
+                "event": {"exclude": ["tag"]},
+            },
         },
         **front_matter
     )
