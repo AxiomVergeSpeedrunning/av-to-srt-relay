@@ -66,5 +66,5 @@ def publish(combinations):
             "checksum": ["md5", "sha256"],
         },
         "depends_on": depends_on,
-        "when": {"branch": ["main"]},
+        "when": {"event": ["tag"]},
     }
