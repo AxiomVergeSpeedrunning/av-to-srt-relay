@@ -19,12 +19,13 @@ def main(ctx):
         ("darwin", "arm64"),
     )
 
-    return [
-        dict(
-            {"steps": [step(os, arch) for os, arch in combinations] + [publish()]},
-            **front_matter
-        )
-    ]
+    return [job(os, arch) for os, arch in combinations] + [publish(combinations)]
+
+
+def job(os, arch):
+    return dict(
+        {"name": "build %s-%s" % (os, arch), "steps": [step(os, arch)]}, **front_matter
+    )
 
 
 def step(os, arch):
@@ -51,14 +52,24 @@ def step(os, arch):
     }
 
 
-def publish():
-    return {
-        "name": "publish",
-        "image": "plugins/github-release",
-        "settings": {
-            "api_key": {"from_secret": "GITHUB_API_KEY"},
-            "files": ["bin/*"],
-            "checksum": ["md5", "sha256"],
+def publish(combinations):
+    return dict(
+        {
+            "name": "publish",
+            "steps": [step(os, arch) for os, arch in combinations]
+            + [
+                {
+                    "name": "publish",
+                    "image": "plugins/github-release",
+                    "settings": {
+                        "api_key": {"from_secret": "GITHUB_API_KEY"},
+                        "files": ["bin/*"],
+                        "checksum": ["md5", "sha256"],
+                    },
+                    "when": {"event": ["tag"]},
+                }
+            ],
+            "trigger": {"event": ["tag"]},
         },
-        "when": {"event": ["tag"]},
-    }
+        **front_matter
+    )
