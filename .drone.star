@@ -68,13 +68,13 @@ def publish(combinations):
                     "image": "plugins/github-release",
                     "settings": {
                         "api_key": {"from_secret": "GITHUB_API_KEY"},
-                        "files": ["bin/*"],
+                        "files": ["bin/*", "CHANGELOG.md"],
                         "checksum": ["md5", "sha256"],
-                        "title": "$DRONE_TAG",
+                        "title": "${DRONE_TAG}",
                         "notes": "CHANGELOG.md",
                     },
                     "when": {"event": ["tag"]},
-                }
+                },
             ],
             "trigger": {"event": ["tag"]},
         },
