@@ -27,7 +27,7 @@ def job(os, arch):
         {
             "name": "build %s-%s" % (os, arch),
             "steps": [step(os, arch)],
-            "when": {"event": {"exclude": ["tag"]}},
+            "when": {"event": ["pull_request"]},
         },
         **front_matter
     )
