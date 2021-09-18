@@ -21,10 +21,7 @@ def main(ctx):
 
     return [
         dict(
-            {
-                "steps": [step(os, arch) for os, arch in combinations]
-                + [publish(combinations)]
-            },
+            {"steps": [step(os, arch) for os, arch in combinations] + [publish()]},
             **front_matter
         )
     ]
@@ -54,9 +51,7 @@ def step(os, arch):
     }
 
 
-def publish(combinations):
-    depends_on = ["{}-{}".format(os, arch) for os, arch in combinations]
-
+def publish():
     return {
         "name": "publish",
         "image": "plugins/github-release",
@@ -65,6 +60,5 @@ def publish(combinations):
             "files": ["bin/*"],
             "checksum": ["md5", "sha256"],
         },
-        "depends_on": depends_on,
         "when": {"event": ["tag"]},
     }
