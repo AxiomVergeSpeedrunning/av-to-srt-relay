@@ -20,7 +20,13 @@ def main(ctx):
     )
 
     return [
-        dict({"steps": [step(os, arch) for os, arch in combinations]}, **front_matter)
+        dict(
+            {
+                "steps": [step(os, arch) for os, arch in combinations]
+                + [publish(combinations)]
+            },
+            **front_matter
+        )
     ]
 
 
@@ -33,42 +39,32 @@ def step(os, arch):
     if os == "darwin":
         os_name = "macos"
 
-    return dict(
-        {
-            "name": "%s-%s" % (os, arch),
-            "image": "golang",
-            "commands": [
-                "mkdir -p bin",
-                "GOOS={os} GOARCH={arch} go build -o bin/avsrt-{os_name}-{arch}.{ext}".format(
-                    os=os,
-                    os_name=os_name,
-                    arch=arch,
-                    ext=ext,
-                ),
-            ],
-        },
-    )
+    return {
+        "name": "%s-%s" % (os, arch),
+        "image": "golang",
+        "commands": [
+            "mkdir -p bin",
+            "GOOS={os} GOARCH={arch} go build -o bin/avsrt-{os_name}-{arch}.{ext}".format(
+                os=os,
+                os_name=os_name,
+                arch=arch,
+                ext=ext,
+            ),
+        ],
+    }
 
 
 def publish(combinations):
     depends_on = ["{}-{}".format(os, arch) for os, arch in combinations]
 
-    return dict(
-        {
-            "name": "publish",
-            "depends_on": depends_on,
-            "trigger": {"branch": ["master"]},
-            "steps": [
-                {
-                    "name": "release",
-                    "image": "plugins/github-release",
-                    "settings": {
-                        "api_key": {"from_secret": "GITHUB_API_KEY"},
-                        "files": ["bin/*"],
-                        "checksum": ["md5", "sha256"],
-                    },
-                }
-            ],
+    return {
+        "name": "publish",
+        "image": "plugins/github-release",
+        "settings": {
+            "api_key": {"from_secret": "GITHUB_API_KEY"},
+            "files": ["bin/*"],
+            "checksum": ["md5", "sha256"],
         },
-        **front_matter
-    )
+        "depends_on": depends_on,
+        "when": {"branch": ["main"]},
+    }
