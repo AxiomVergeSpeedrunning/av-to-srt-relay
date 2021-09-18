@@ -1,5 +1,7 @@
 # Axiom Verge SRT Pipeline
 
+[![Build Status](https://drone.aricodes.net/api/badges/AxiomVergeSpeedrunning/av-to-srt-relay/status.svg)](https://drone.aricodes.net/AxiomVergeSpeedrunning/av-to-srt-relay)
+
 ## What is this?
 
 For tournaments and competitive speedrunning events, it's desirable for the hosts to be able to track the runner's progress in game in real time. Axiom Verge has a websocket API built into it, but it's only accessible through `localhost`. This program pushes it out to the remote relay used by the excellent [SRT framework](https://github.com/Squirrelies/SRTHost).
