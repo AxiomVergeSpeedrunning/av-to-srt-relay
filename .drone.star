@@ -1,14 +1,31 @@
+front_matter = {
+    "kind": "pipeline",
+    "type": "docker",
+    "platform": {"os": "linux", "arch": "arm64"},
+}
+
+
 def main(ctx):
     combinations = (
         ("linux", "amd64"),
         ("linux", "arm64"),
         ("linux", "arm"),
+        ("linux", "386"),
         ("windows", "amd64"),
+        ("windows", "arm64"),
+        ("windows", "arm"),
+        ("windows", "386"),
         ("darwin", "amd64"),
         ("darwin", "arm64"),
     )
 
-    return [step(os, arch) for os, arch in combinations]
+    return [job(os, arch) for os, arch in combinations] + [publish(combinations)]
+
+
+def job(os, arch):
+    return dict(
+        {"name": "build %s-%s" % (os, arch), "steps": [step(os, arch)]}, **front_matter
+    )
 
 
 def step(os, arch):
@@ -21,24 +38,38 @@ def step(os, arch):
         os_name = "macos"
 
     return {
-        "kind": "pipeline",
-        "type": "docker",
         "name": "%s-%s" % (os, arch),
-        "platform": {"os": "linux", "arch": "arm64"},
-        "trigger": {"branch": ["main"]},
-        "steps": [
-            {
-                "name": "build",
-                "image": "golang",
-                "commands": [
-                    "mkdir -p bin",
-                    "GOOS={os} GOARCH={arch} go build -o bin/avsrt-{os_name}-{arch}.{ext}".format(
-                        os=os,
-                        os_name=os_name,
-                        arch=arch,
-                        ext=ext,
-                    ),
-                ],
-            },
+        "image": "golang",
+        "commands": [
+            "mkdir -p bin",
+            "GOOS={os} GOARCH={arch} go build -o bin/avsrt-{os_name}-{arch}.{ext}".format(
+                os=os,
+                os_name=os_name,
+                arch=arch,
+                ext=ext,
+            ),
         ],
     }
+
+
+def publish(combinations):
+    return dict(
+        {
+            "name": "publish",
+            "steps": [step(os, arch) for os, arch in combinations]
+            + [
+                {
+                    "name": "publish",
+                    "image": "plugins/github-release",
+                    "settings": {
+                        "api_key": {"from_secret": "GITHUB_API_KEY"},
+                        "files": ["bin/*"],
+                        "checksum": ["md5", "sha256"],
+                    },
+                    "when": {"event": ["tag"]},
+                }
+            ],
+            "trigger": {"event": ["tag"]},
+        },
+        **front_matter
+    )

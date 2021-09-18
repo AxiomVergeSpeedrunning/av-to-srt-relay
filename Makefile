@@ -1,4 +1,4 @@
-all: windows linux linux-arm macos macos-arm
+all: windows windows-arm linux linux-arm macos macos-arm
 
 linux: dir
 	GOOS=linux GOARCH=amd64 go build -o bin/avsrt-linux-x64.bin
@@ -8,6 +8,9 @@ linux-arm: dir
 
 windows: dir
 	GOOS=windows GOARCH=amd64 go build -o bin/avsrt-windows-x64.exe
+
+windows-arm: dir
+	GOOS=windows GOARCH=arm64 go build -o bin/avsrt-windows-arm64.exe
 
 macos: dir
 	GOOS=darwin GOARCH=amd64 go build -o bin/avsrt-macos-x64.bin
