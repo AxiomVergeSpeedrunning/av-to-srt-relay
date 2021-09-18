@@ -18,7 +18,7 @@ def step(os, arch):
 
     os_name = os
     if os == "darwin":
-        os_name = macos
+        os_name = "macos"
 
     return {
         "kind": "pipeline",
