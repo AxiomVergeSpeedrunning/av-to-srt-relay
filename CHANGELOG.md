@@ -1,0 +1,3 @@
+- Added support for 32-bit platforms
+- Added support for Windows-based ARM platforms
+- Use Drone for CI/CD
