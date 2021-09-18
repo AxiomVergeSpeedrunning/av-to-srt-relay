@@ -71,7 +71,7 @@ def publish(combinations):
                         "files": ["bin/*", "CHANGELOG.md"],
                         "checksum": ["md5", "sha256"],
                         "title": "${DRONE_TAG}",
-                        "notes": "CHANGELOG.md",
+                        "note": "CHANGELOG.md",
                     },
                     "when": {"event": ["tag"]},
                 },
