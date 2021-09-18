@@ -2,7 +2,7 @@ def main(ctx):
     combinations = (
         ("linux", "amd64"),
         ("linux", "arm64"),
-        ("linux", "armhf"),
+        ("linux", "arm32"),
         ("windows", "amd64"),
         ("darwin", "amd64"),
         ("darwin", "arm64"),
