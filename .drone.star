@@ -33,7 +33,7 @@ def step(os, arch):
                 "commands": [
                     "mkdir -p bin",
                     "GOOS={os} GOARCH={arch} go build -o bin/avsrt-{os_name}-{arch}.{ext}".format(
-                        os_name=os_name, arch=arch, ext=ext
+                        os=os, os_name=os_name, arch=arch, ext=ext
                     ),
                 ],
             }
