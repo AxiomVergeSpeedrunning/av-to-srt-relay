@@ -22,6 +22,7 @@ def step(os, arch):
 
     return {
         "kind": "pipeline",
+        "type": "docker",
         "name": "%s-%s" % (os, arch),
         "platform": {"os": "linux", "arch": "arm64"},
         "trigger": {"branch": ["main"]},
