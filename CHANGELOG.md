@@ -1,3 +1,2 @@
-- Added support for 32-bit platforms
-- Added support for Windows-based ARM platforms
-- Use Drone for CI/CD
+- Hopefully sped up the build process for cross-compilation by using native AMD64 worker drones
+- No actual code changes
