@@ -23,6 +23,9 @@ def main(ctx):
 
 
 def job(os, arch):
+    # Don't cross compile if we don't have to
+    running_arch = "amd64" if arch == "amd64" else "arm64"
+
     return dict(
         {
             "name": "build %s-%s" % (os, arch),
